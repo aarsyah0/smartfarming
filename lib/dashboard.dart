@@ -39,16 +39,10 @@ class _DashboardPageState extends State<DashboardPage>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final width = size.width;
-    final height = size.height;
-    final cardWidth = width * 0.92;
-    final cardHeight = height * 0.15;
-    final iconSize = width * 0.13;
-    final fontSize = width * 0.052;
-    final borderRadius = width * 0.06;
-    final buttonFont = width * 0.045;
-    final buttonPaddingH = width * 0.09;
-    final buttonPaddingV = height * 0.018;
+    final cardWidth = size.width * 0.90;
+    final cardHeight = size.height * 0.15;
+    final iconSize = size.width * 0.13;
+    final fontSize = size.width * 0.052;
     final time = TimeOfDay.now().format(context);
     // Palet warna
     const greenPrimary = Color(0xFF1CB56B);
@@ -58,371 +52,361 @@ class _DashboardPageState extends State<DashboardPage>
     const blueHumidity = Color(0xFF0288D1);
     const yellowBadge = Color(0xFFFFF9C4);
     const cardShadow = Color(0x331CB56B);
+    const borderRadius = 24.0;
 
     return Scaffold(
       backgroundColor: greenBg,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            children: [
-              // Modern custom header
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [greenGradientStart, greenPrimary],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(width * 0.08),
-                    bottomRight: Radius.circular(width * 0.08),
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: cardShadow,
-                      blurRadius: 18,
-                      offset: Offset(0, 8),
-                    ),
-                  ],
+      body: Column(
+        children: [
+          // Modern custom header
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [greenGradientStart, greenPrimary],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: cardShadow,
+                  blurRadius: 18,
+                  offset: Offset(0, 8),
                 ),
-                child: Column(
+              ],
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: size.height * 0.025),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: height * 0.025),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: width * 0.12,
-                          height: width * 0.12,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(width * 0.035),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.eco,
-                            color: greenPrimary,
-                            size: width * 0.08,
-                          ),
-                        ),
-                        SizedBox(width: width * 0.04),
-                        Text(
-                          'Smart Farming',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: width * 0.065,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height * 0.012),
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.045,
-                        vertical: height * 0.008,
-                      ),
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
-                        color: yellowBadge.withOpacity(0.85),
-                        borderRadius: BorderRadius.circular(width * 0.04),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            color: greenPrimary,
-                            size: width * 0.055,
-                          ),
-                          SizedBox(width: width * 0.018),
-                          Text(
-                            time,
-                            style: TextStyle(
-                              color: greenPrimary,
-                              fontSize: width * 0.045,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.1,
-                            ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.06),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
+                      child: const Icon(
+                        Icons.eco,
+                        color: greenPrimary,
+                        size: 30,
+                      ),
                     ),
-                    SizedBox(height: height * 0.025),
+                    const SizedBox(width: 14),
+                    Text(
+                      'Smart Farming',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: size.width * 0.065,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(height: height * 0.03),
-              Expanded(
-                child: Center(
-                  child: FadeTransition(
-                    opacity: _fadeAnim,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Card suhu
-                        Container(
-                          width: cardWidth,
-                          height: cardHeight,
-                          margin: EdgeInsets.only(bottom: height * 0.022),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(borderRadius),
-                            boxShadow: [
-                              BoxShadow(
-                                color: cardShadow,
-                                blurRadius: 18,
-                                offset: Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: width * 0.045),
-                                child: Stack(
-                                  alignment: Alignment.topRight,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: blueTemp.withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(width * 0.045),
-                                      ),
-                                      padding: EdgeInsets.all(width * 0.038),
-                                      child: Icon(
-                                        Icons.thermostat,
-                                        color: blueTemp,
-                                        size: iconSize,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: width * 0.025,
-                                          vertical: height * 0.003,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: blueTemp,
-                                          borderRadius: BorderRadius.circular(width * 0.03),
-                                        ),
-                                        child: Text(
-                                          '°C',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: width * 0.032,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Temperature',
-                                      style: TextStyle(
-                                        color: blueTemp,
-                                        fontSize: fontSize * 0.95,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${temperature.toStringAsFixed(1)}',
-                                      style: TextStyle(
-                                        color: blueTemp,
-                                        fontSize: fontSize * 1.35,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: width * 0.045),
-                            ],
-                          ),
+                SizedBox(height: size.height * 0.012),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: yellowBadge.withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        color: greenPrimary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 7),
+                      Text(
+                        time,
+                        style: const TextStyle(
+                          color: greenPrimary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.1,
                         ),
-                        // Card kelembapan
-                        Container(
-                          width: cardWidth,
-                          height: cardHeight,
-                          margin: EdgeInsets.only(bottom: height * 0.022),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(borderRadius),
-                            boxShadow: [
-                              BoxShadow(
-                                color: cardShadow,
-                                blurRadius: 18,
-                                offset: Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: width * 0.045),
-                                child: Stack(
-                                  alignment: Alignment.topRight,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: blueHumidity.withOpacity(0.13),
-                                        borderRadius: BorderRadius.circular(width * 0.045),
-                                      ),
-                                      padding: EdgeInsets.all(width * 0.038),
-                                      child: Icon(
-                                        Icons.water_drop,
-                                        color: blueHumidity,
-                                        size: iconSize,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: width * 0.025,
-                                          vertical: height * 0.003,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: blueHumidity,
-                                          borderRadius: BorderRadius.circular(width * 0.03),
-                                        ),
-                                        child: Text(
-                                          '%',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: width * 0.032,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Humidity',
-                                      style: TextStyle(
-                                        color: blueHumidity,
-                                        fontSize: fontSize * 0.95,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Text(
-                                      '${humidity.toStringAsFixed(1)}',
-                                      style: TextStyle(
-                                        color: blueHumidity,
-                                        fontSize: fontSize * 1.35,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: width * 0.045),
-                            ],
-                          ),
-                        ),
-                        // Tombol
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: size.height * 0.025),
+              ],
+            ),
+          ),
+          const Spacer(flex: 2),
+          FadeTransition(
+            opacity: _fadeAnim,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Card suhu
+                Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  margin: const EdgeInsets.only(bottom: 18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    boxShadow: [
+                      BoxShadow(
+                        color: cardShadow,
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                        child: Stack(
+                          alignment: Alignment.topRight,
                           children: [
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  fanOn = !fanOn;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.tornado,
-                                color: fanOn ? Colors.white : greenPrimary,
-                                size: width * 0.07,
+                            Container(
+                              decoration: BoxDecoration(
+                                color: blueTemp.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(18),
                               ),
-                              label: Text(
-                                fanOn ? 'Kipas ON' : 'Kipas OFF',
-                                style: TextStyle(
-                                  color: fanOn ? Colors.white : greenPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: buttonFont,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: fanOn ? greenPrimary : Colors.white,
-                                side: BorderSide(color: greenPrimary, width: width * 0.008),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(width * 0.06),
-                                ),
-                                elevation: 0,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: buttonPaddingH,
-                                  vertical: buttonPaddingV,
-                                ),
+                              padding: const EdgeInsets.all(14),
+                              child: Icon(
+                                Icons.thermostat,
+                                color: blueTemp,
+                                size: iconSize,
                               ),
                             ),
-                            SizedBox(width: width * 0.06),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  pumpOn = !pumpOn;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.water,
-                                color: pumpOn ? Colors.white : greenPrimary,
-                                size: width * 0.07,
-                              ),
-                              label: Text(
-                                pumpOn ? 'Pompa ON' : 'Pompa OFF',
-                                style: TextStyle(
-                                  color: pumpOn ? Colors.white : greenPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: buttonFont,
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
                                 ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: pumpOn ? greenPrimary : Colors.white,
-                                side: BorderSide(color: greenPrimary, width: width * 0.008),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(width * 0.06),
+                                decoration: BoxDecoration(
+                                  color: blueTemp,
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                elevation: 0,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: buttonPaddingH,
-                                  vertical: buttonPaddingV,
+                                child: const Text(
+                                  '°C',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Temperature',
+                              style: TextStyle(
+                                color: blueTemp,
+                                fontSize: fontSize * 0.95,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              '${temperature.toStringAsFixed(1)}',
+                              style: TextStyle(
+                                color: blueTemp,
+                                fontSize: fontSize * 1.35,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 18),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+                // Card kelembapan
+                Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  margin: const EdgeInsets.only(bottom: 18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    boxShadow: [
+                      BoxShadow(
+                        color: cardShadow,
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: blueHumidity.withOpacity(0.13),
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              padding: const EdgeInsets.all(14),
+                              child: Icon(
+                                Icons.water_drop,
+                                color: blueHumidity,
+                                size: iconSize,
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: blueHumidity,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Text(
+                                  '%',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Humidity',
+                              style: TextStyle(
+                                color: blueHumidity,
+                                fontSize: fontSize * 0.95,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              '${humidity.toStringAsFixed(1)}',
+                              style: TextStyle(
+                                color: blueHumidity,
+                                fontSize: fontSize * 1.35,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 18),
+                    ],
+                  ),
+                ),
+                // Tombol
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          fanOn = !fanOn;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.tornado,
+                        color: fanOn ? Colors.white : greenPrimary,
+                      ),
+                      label: Text(
+                        fanOn ? 'Kipas ON' : 'Kipas OFF',
+                        style: TextStyle(
+                          color: fanOn ? Colors.white : greenPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: fanOn ? greenPrimary : Colors.white,
+                        side: const BorderSide(color: greenPrimary, width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.09,
+                          vertical: size.height * 0.018,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: size.width * 0.06),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          pumpOn = !pumpOn;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.water,
+                        color: pumpOn ? Colors.white : greenPrimary,
+                      ),
+                      label: Text(
+                        pumpOn ? 'Pompa ON' : 'Pompa OFF',
+                        style: TextStyle(
+                          color: pumpOn ? Colors.white : greenPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: pumpOn ? greenPrimary : Colors.white,
+                        side: const BorderSide(color: greenPrimary, width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.09,
+                          vertical: size.height * 0.018,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Spacer(flex: 3),
+        ],
       ),
     );
   }
