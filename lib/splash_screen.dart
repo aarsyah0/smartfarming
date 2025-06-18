@@ -19,17 +19,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final logoSize = size.width * 0.3;
-    final borderRadius = size.width * 0.08;
-    final fontSize = size.width * 0.08;
-    final progressSize = size.width * 0.1;
+    final logoSize = size.width * 0.23;
+    final borderRadius = size.width * 0.07;
+    final textSizeFrom = size.width * 0.025;
+    final textSizePolije = size.width * 0.028;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
+      body: Stack(
+        children: [
+          Center(
+            child: Container(
               width: logoSize,
               height: logoSize,
               decoration: BoxDecoration(
@@ -41,23 +40,37 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Image.asset('assets/logo.png'),
               ),
             ),
-            SizedBox(height: size.height * 0.03),
-            Text(
-              'Smart Farm',
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: size.height * 0.06,
+            child: Column(
+              children: [
+                Text(
+                  'from',
+                  style: TextStyle(
+                    fontSize: textSizeFrom,
+                    color: Colors.grey[500],
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: size.height * 0.006),
+                Text(
+                  'Politeknik Negeri Jember',
+                  style: TextStyle(
+                    fontSize: textSizePolije,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-            SizedBox(height: size.height * 0.04),
-            SizedBox(
-              width: progressSize,
-              height: progressSize,
-              child: const CircularProgressIndicator(color: Colors.green),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
