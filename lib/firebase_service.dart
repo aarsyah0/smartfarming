@@ -75,4 +75,9 @@ class FirebaseService {
       'timestamp': ServerValue.timestamp,
     });
   }
+
+  // Hapus riwayat berdasarkan ID
+  Future<void> deleteHistory(String id) async {
+    await _database.child('riwayat').child(id).remove();
+  }
 } 

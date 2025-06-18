@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'firebase_service.dart';
 
 class HistoryPage extends StatefulWidget {
   final List<Map<String, dynamic>> history;
@@ -10,6 +11,51 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  final FirebaseService _firebaseService = FirebaseService();
+
+  Future<void> _deleteHistory(String id) async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Konfirmasi Hapus'),
+        content: const Text('Apakah Anda yakin ingin menghapus data ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _firebaseService.deleteHistory(id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Data berhasil dihapus'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal menghapus data'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -114,6 +160,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 DataColumn(label: Text('Humidity')),
                                 DataColumn(label: Text('Kipas')),
                                 DataColumn(label: Text('Pompa')),
+                                DataColumn(label: Text('Aksi')),
                               ],
                               rows: List.generate(sortedHistory.length, (i) {
                                 final h = sortedHistory[i];
@@ -215,6 +262,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 : Colors.red[800],
                                           ),
                                         ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.delete_outline,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
+                                        onPressed: () => _deleteHistory(h['id'] as String),
+                                        tooltip: 'Hapus data',
                                       ),
                                     ),
                                   ],
