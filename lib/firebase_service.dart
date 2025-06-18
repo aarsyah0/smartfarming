@@ -80,4 +80,24 @@ class FirebaseService {
   Future<void> deleteHistory(String id) async {
     await _database.child('riwayat').child(id).remove();
   }
+
+  // Stream untuk mendapatkan mode manual
+  Stream<bool> getManualMode() {
+    return _database.child('control/manual').onValue.map((event) {
+      final data = event.snapshot.value as bool?;
+      return data ?? false;
+    });
+  }
+
+  Future<void> setManualMode(bool value) async {
+    await _database.child('control/manual').set(value);
+  }
+
+  Future<void> setControlFanFromStatus(bool status) async {
+    await _database.child('control/kipas').set(status ? "ON" : "OFF");
+  }
+
+  Future<void> setControlPumpFromStatus(bool status) async {
+    await _database.child('control/pompa').set(status ? "ON" : "OFF");
+  }
 } 

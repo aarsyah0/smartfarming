@@ -18,6 +18,7 @@ class _DashboardPageState extends State<DashboardPage>
   double humidity = 0.0;
   bool fanOn = false;
   bool pumpOn = false;
+  bool isManual = false;
   int _selectedIndex = 0;
   late AnimationController _controller;
   late Animation<double> _fadeAnim;
@@ -54,6 +55,8 @@ class _DashboardPageState extends State<DashboardPage>
         setState(() {
           fanOn = status;
         });
+        // Sinkronkan ke control/kipas
+        _firebaseService.setControlFanFromStatus(status);
       }
     });
 
@@ -62,6 +65,17 @@ class _DashboardPageState extends State<DashboardPage>
       if (mounted) {
         setState(() {
           pumpOn = status;
+        });
+        // Sinkronkan ke control/pompa
+        _firebaseService.setControlPumpFromStatus(status);
+      }
+    });
+
+    // Listen to manual mode
+    _firebaseService.getManualMode().listen((manual) {
+      if (mounted) {
+        setState(() {
+          isManual = manual;
         });
       }
     });
@@ -128,73 +142,77 @@ class _DashboardPageState extends State<DashboardPage>
     required String label,
     required IconData icon,
     required Color color,
+    required bool enabled,
   }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(5),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Icon(icon, color: color, size: 28),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: color,
-                  ),
-                ),
-                SizedBox(height: 8),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: isOn ? color : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: (isOn ? color : Colors.grey[300]!).withOpacity(
-                          0.3,
-                        ),
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    isOn ? 'ON' : 'OFF',
-                    style: TextStyle(
-                      color: isOn ? Colors.white : Colors.grey[600],
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+        child: Opacity(
+          opacity: enabled ? 1.0 : 0.5,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
                 ),
               ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Icon(icon, color: color, size: 28),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: color,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isOn ? color : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: (isOn ? color : Colors.grey[300]!).withOpacity(
+                            0.3,
+                          ),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      isOn ? 'ON' : 'OFF',
+                      style: TextStyle(
+                        color: isOn ? Colors.white : Colors.grey[600],
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -434,6 +452,26 @@ class _DashboardPageState extends State<DashboardPage>
                     ),
                   ],
                 ),
+                // Tambahkan switch manual mode di sini
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Mode Manual',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Switch(
+                        value: isManual,
+                        onChanged: (val) {
+                          _firebaseService.setManualMode(val);
+                        },
+                        activeColor: greenPrimary,
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: gridPadding),
                 // Grid 2x2
                 Expanded(
@@ -444,7 +482,7 @@ class _DashboardPageState extends State<DashboardPage>
                       mainAxisSpacing: gridSpacing,
                       crossAxisSpacing: gridSpacing,
                       childAspectRatio: 1,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         // Temperature
                         _buildSensorCard(
@@ -469,6 +507,7 @@ class _DashboardPageState extends State<DashboardPage>
                           label: 'Kipas',
                           icon: Icons.ac_unit_rounded,
                           color: greenPrimary,
+                          enabled: isManual,
                         ),
                         // Pump Control
                         _buildControlButton(
@@ -477,6 +516,7 @@ class _DashboardPageState extends State<DashboardPage>
                           label: 'Pompa',
                           icon: Icons.water_rounded,
                           color: greenPrimary,
+                          enabled: isManual,
                         ),
                       ],
                     ),
